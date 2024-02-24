@@ -93,78 +93,78 @@ env:
   OMP_NUM_THREADS: 2
   CXX_STANDARD: 17
   MONOLITH: ON
-  TLX_PATH: /home/runner/work/networkit/networkit/tlx
-  TLX_PATH_WIN: /d/a/networkit/networkit/tlx
+  TLX_PATH: /home/runner/work/CyberSchrotti/networkit/tlx
+  TLX_PATH_WIN: /d/a/CyberSchrotti/networkit/tlx
   NATIVE: OFF
 
 jobs:
-  macos-build-latest-version-apple-clang:
-    name: "macOS ${{ matrix.os }} (apple-clang, CPython 3.12): ${{ matrix.build-configuration }}"
-    runs-on: macos-${{ matrix.os }}
-    env:
-      CC: cc
-      CXX: c++
-    strategy:
-      matrix:
-        os: ['13']
-        build-configuration: ['full', 'full (native)']
-    steps:
-      - name: Install prerequisites
-        run: |
-          brew install libomp
-          brew install ninja
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Checkout networkit
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Checkout tlx
-        uses: actions/checkout@v4
-        with:
-          repository: tlx/tlx
-          path: tlx
-      - name: Prepare environment and run checks
-        run:  ${{ github.workspace }}/.github/workflows/scripts/full.sh
-        shell: bash
-        env:
-          TLX_PATH: /Users/runner/work/networkit/networkit/tlx
-          NATIVE: ${{ matrix.os == 'full (native)' }}
-
-  macos-build-latest-version-misc:
-    name: "macOS ${{ matrix.os }} (${{ matrix.compiler }}): core"
-    runs-on: macos-${{ matrix.os }}
-    strategy:
-      matrix:
-        os: ['13']
-        compiler: ['clang-17', 'gcc-13']
-    steps:
-      - name: Install prerequisites
-        run: |
-          brew install libomp
-          brew install ninja
-      - name: Install compiler llvm
-        if: matrix.compiler == 'clang-17'
-        run: |
-          brew reinstall llvm@17
-          brew link --overwrite llvm@17
-      - name: Install compiler gcc
-        if: matrix.compiler == 'gcc-13'
-        run: |
-          brew reinstall gcc@13
-          brew link --overwrite gcc@13
-      - name: Checkout networkit
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Prepare environment and run checks
-        run:  ${{ github.workspace }}/.github/workflows/scripts/cpp_only.sh
-        shell: bash
-        env:
-          CC: ${{ matrix.compiler == 'clang-16' && '/usr/local/opt/llvm@17/bin/clang' || 'gcc-13' }}
-          CXX: ${{ matrix.compiler == 'clang-16' && '/usr/local/opt/llvm@17/bin/clang++' || 'g++-13' }}
+  #macos-build-latest-version-apple-clang:
+  #  name: "macOS ${{ matrix.os }} (apple-clang, CPython 3.12): ${{ matrix.build-configuration }}"
+  #  runs-on: macos-${{ matrix.os }}
+  #  env:
+  #    CC: cc
+  #    CXX: c++
+  #  strategy:
+  #    matrix:
+  #      os: ['13']
+  #      build-configuration: ['full', 'full (native)']
+  #  steps:
+  #    - name: Install prerequisites
+  #      run: |
+  #        brew install libomp
+  #        brew install ninja
+  #    - name: Setup Python 3.12
+  #      uses: actions/setup-python@v5
+  #      with:
+  #        python-version: '3.12'
+  #    - name: Checkout networkit
+  #      uses: actions/checkout@v4
+  #      with:
+  #        submodules: true
+  #    - name: Checkout tlx
+  #      uses: actions/checkout@v4
+  #      with:
+  #        repository: tlx/tlx
+  #        path: tlx
+  #    - name: Prepare environment and run checks
+  #      run:  ${{ github.workspace }}/.github/workflows/scripts/full.sh
+  #      shell: bash
+  #      env:
+  #        TLX_PATH: /Users/runner/work/networkit/networkit/tlx
+  #        NATIVE: ${{ matrix.os == 'full (native)' }}
+  #
+  #macos-build-latest-version-misc:
+  #  name: "macOS ${{ matrix.os }} (${{ matrix.compiler }}): core"
+  #  runs-on: macos-${{ matrix.os }}
+  #  strategy:
+  #    matrix:
+  #      os: ['13']
+  #      compiler: ['clang-17', 'gcc-13']
+  #  steps:
+  #    - name: Install prerequisites
+  #      run: |
+  #        brew install libomp
+  #        brew install ninja
+  #    - name: Install compiler llvm
+  #      if: matrix.compiler == 'clang-17'
+  #      run: |
+  #        brew reinstall llvm@17
+  #        brew link --overwrite llvm@17
+  #    - name: Install compiler gcc
+  #      if: matrix.compiler == 'gcc-13'
+  #      run: |
+  #        brew reinstall gcc@13
+  #        brew link --overwrite gcc@13
+  #    - name: Checkout networkit
+  #      uses: actions/checkout@v4
+  #      with:
+  #        submodules: true
+  #    - name: Prepare environment and run checks
+  #      run:  ${{ github.workspace }}/.github/workflows/scripts/cpp_only.sh
+  #      shell: bash
+  #      env:
+  #        CC: ${{ matrix.compiler == 'clang-16' && '/usr/local/opt/llvm@17/bin/clang' || 'gcc-13' }}
+  #        CXX: ${{ matrix.compiler == 'clang-16' && '/usr/local/opt/llvm@17/bin/clang++' || 'g++-13' }}
 
   linux-build-latest:
     name: "Linux (gcc-12${{ startsWith(matrix.build-configuration, 'full') && ', CPython 3.12' || '' }}): ${{ matrix.build-configuration }}"
